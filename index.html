@@ -163,6 +163,15 @@
             max-width: 96px;
             height: auto;
         }
+        .header-meta-block {
+            text-align: right;
+        }
+        .profile-image-wrap {
+            margin-top: 8px;
+        }
+        .summary-panel + .summary-panel {
+            margin-top: 22px;
+        }
         .page-title-row {
             display: flex;
             align-items: center;
@@ -185,19 +194,128 @@
             white-space: normal;
             min-width: 240px;
         }
+        .table-responsive {
+            border: none;
+            margin-bottom: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-scroll-hint {
+            display: none;
+            font-size: 12px;
+            color: #5f6c7b;
+            padding: 10px 14px 0;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+        .filter-actions .btn {
+            width: 100%;
+        }
+        .student-info-card > div {
+            margin-bottom: 6px;
+        }
+        .student-info-card > div:last-child {
+            margin-bottom: 0;
+        }
         @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            .header-bg {
+                padding: 14px 0;
+            }
+            .page-shell {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .row {
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+            [class*="col-"] {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .col-xs-3.col-sm-2.col-md-2,
+            .col-xs-6.col-sm-5.col-md-5,
+            .col-xs-3.col-sm-5.col-md-5 {
+                width: 100%;
+                text-align: center;
+            }
             .avatar-img {
-                width: 55px;
-                height: 55px;
+                width: 78px;
+                height: 78px;
             }
             .logo-img {
-                max-width: 55px;
+                max-width: 68px;
             }
             .university-title {
-                font-size: 14px;
+                font-size: 16px;
+                margin-top: 10px;
+                margin-bottom: 10px;
             }
             .search-box-wrap {
                 width: 100%;
+            }
+            .header-meta-block {
+                text-align: center;
+                background: #fff;
+                border-radius: 12px;
+                padding: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            }
+            .profile-image-wrap {
+                margin-top: 12px;
+            }
+            .student-details-header {
+                font-size: 12px;
+                line-height: 1.6;
+            }
+            .page-title-row {
+                gap: 12px;
+            }
+            .page-title-row h2 {
+                font-size: 22px;
+                line-height: 1.3;
+            }
+            .panel-custom {
+                border-radius: 10px;
+            }
+            .panel-body {
+                padding: 14px;
+            }
+            .filter-actions {
+                flex-direction: column;
+                margin-top: 14px;
+            }
+            .filter-actions .btn {
+                min-height: 42px;
+            }
+            .student-info-card {
+                padding: 12px 14px;
+            }
+            .table-scroll-hint {
+                display: block;
+            }
+            .table-buft {
+                min-width: 980px;
+                font-size: 12px;
+            }
+            .table-buft th,
+            .table-buft td {
+                padding: 8px 6px;
+            }
+            .offline-card {
+                width: calc(100% - 24px);
+                padding: 24px 20px;
+                border-radius: 20px;
+            }
+            .footer {
+                margin-top: 20px;
+                padding: 14px 10px;
+                line-height: 1.6;
             }
         }
         .navbar-buft {
@@ -255,7 +373,7 @@
                 </div>
                 <!-- Student Info & Photo -->
                 <div class="col-xs-3 col-sm-5 col-md-5 text-right">
-                    <div class="student-details-header">
+                    <div class="student-details-header header-meta-block">
                         <a href="#" style="color:#c00; font-weight:bold;" onclick="alert('Demo mode: logout disabled'); return false;">Logout</a> | 
                         <span style="font-weight: bold;">241-095-801</span><br>
                         <span>User Role : Student</span><br>
@@ -268,7 +386,7 @@
                             <span id="status-text">Online</span>
                         </div>
                     </div>
-                    <div style="margin-top: 8px;">
+                    <div class="profile-image-wrap">
                         <img id="profilePhoto" src="27094.jpg" alt="Student Photo" class="avatar-img" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230D2D62\'/%3E%3Ctext x=\'50\' y=\'67\' font-size=\'30\' text-anchor=\'middle\' fill=\'white\'%3E👤%3C/text%3E%3C/svg%3E';">
                     </div>
                 </div>
@@ -327,28 +445,29 @@
                         <label><strong>Formal Code</strong></label>
                         <input type="text" id="formalCodeFilter" class="form-control" placeholder="Filter by Formal Code">
                     </div>
-                    <div class="col-md-2" style="margin-top: 22px;">
-                        <button id="filterFormalBtn" class="btn btn-buft btn-sm" style="width:100%;"><i class="fas fa-filter"></i> Filter</button>
-                    </div>
-                    <div class="col-md-4">
-                        <button id="resetFiltersBtn" class="btn btn-default btn-sm" style="margin-top:22px; width:100%;"><i class="fas fa-undo-alt"></i> Reset Filters</button>
+                    <div class="col-md-6">
+                        <div class="filter-actions">
+                            <button id="filterFormalBtn" class="btn btn-buft btn-sm"><i class="fas fa-filter"></i> Filter</button>
+                            <button id="resetFiltersBtn" class="btn btn-default btn-sm"><i class="fas fa-undo-alt"></i> Reset Filters</button>
+                        </div>
                     </div>
                 </div>
                 <hr>
                 <div class="row student-info-card">
                     <div class="col-md-12"><strong>Student Name :</strong> Md. Fahim Ashfaq Rifat</div>
                     <div class="col-md-12"><strong>Batch :</strong> [241] Spring 2024 &nbsp;|&nbsp; <strong>Program :</strong> TE (Textile Engineering)</div>
-                    <div class="col-md-12"><strong>CGPA :</strong> <span style="color:#0D2D62; font-weight:bold; font-size:18px;">2.39</span></div>
+                    <div class="col-md-12"><strong>CGPA :</strong> <span style="color:#0D2D62; font-weight:bold; font-size:18px;">2.89</span></div>
                 </div>
             </div>
         </div>
 
         <!-- Semester wise GPA / CGPA Summary Table (updated Fall 2025) -->
-        <div class="panel panel-custom">
+        <div class="panel panel-custom summary-panel">
             <div class="panel-heading bg-buft-primary" style="color:white; font-weight:bold; border-radius: 12px 12px 0 0;">
                 <i class="fas fa-chart-simple"></i> Semester Wise Performance
             </div>
             <div class="panel-body table-responsive-custom">
+                <div class="table-scroll-hint">Mobile tip: swipe left or right to see the full table.</div>
                 <table class="table table-bordered table-buft" id="semesterSummaryTable">
                     <thead>
                         <tr><th>SL</th><th>Semester</th><th>Credit Hour</th><th>GPA</th><th>CGPA</th></tr>
@@ -364,12 +483,13 @@
         </div>
 
         <!-- Detailed Course Result Table (first 10 grades updated) -->
-        <div class="panel panel-custom">
+        <div class="panel panel-custom summary-panel">
             <div class="panel-heading bg-buft-primary" style="color:white; font-weight:bold;">
                 <i class="fas fa-book-open"></i> Registered Courses & Grades
             </div>
             <div class="panel-body" style="padding: 0;">
                 <div class="table-responsive">
+                    <div class="table-scroll-hint">Mobile tip: swipe left or right to see all course columns.</div>
                     <table class="table table-bordered table-buft" id="courseResultTable" style="margin-bottom: 0;">
                         <thead>
                             <tr><th>SL</th><th>Semester</th><th>Formal Code</th><th>Version Code</th><th>Course Name</th><th>Credit</th><th>Section</th><th>Grade</th><th>Grade Point</th><th>Course Status</th></tr>
@@ -439,7 +559,7 @@
     */
     const imageConfig = {
         // এখানে logo URL বসান
-        logoUrl: 'file:///C:/Users/HP/Downloads/Student%20Course%20Result_files/27094.jpg',
+        logoUrl: 'file:///C:/Users/HP/Downloads/Student%20Course%20Result_files/buft_logo.png',
         // এখানে profile picture URL বসান
         profileUrl: 'file:///C:/Users/HP/Downloads/Student%20Course%20Result_files/27094.jpg'
     };
