@@ -49,7 +49,6 @@
         }
         .header-bg {
             background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
-            border-bottom: 2px solid #0D2D62;
             padding: 18px 0;
         }
         .university-title {
@@ -308,6 +307,63 @@
             .table-buft td {
                 padding: 8px 6px;
             }
+            .navbar-buft {
+                padding-bottom: 10px;
+            }
+            .navbar-shell {
+                box-shadow: 0 4px 14px rgba(13, 45, 98, 0.15);
+                border-radius: 0 0 12px 12px;
+            }
+            .navbar-buft .container.page-shell {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .navbar-header {
+                margin: 0;
+                padding: 0 12px;
+                min-height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .navbar-toggle {
+                margin: 0;
+                border: 0;
+                border-radius: 10px;
+                padding: 10px 12px;
+            }
+            .navbar-brand.visible-xs {
+                float: none;
+                height: auto;
+                padding: 0;
+                line-height: 1;
+                font-size: 15px;
+                font-weight: 700;
+            }
+            .navbar-collapse {
+                border-top: 1px solid rgba(255,255,255,0.12);
+                box-shadow: none;
+                background: #12376f;
+            }
+            .navbar-buft .navbar-nav {
+                margin: 0;
+            }
+            .navbar-buft .navbar-nav > li {
+                float: none;
+            }
+            .navbar-buft .navbar-nav > li > a {
+                padding: 14px 16px;
+                border-top: 1px solid rgba(255,255,255,0.08);
+            }
+            .navbar-buft .navbar-nav > li:first-child > a {
+                border-top: 0;
+            }
+            .navbar-buft .navbar-nav > li.active > a {
+                background: #1e4a8e;
+            }
+            #semesterSummaryTable {
+                min-width: 560px;
+            }
             .offline-card {
                 width: calc(100% - 24px);
                 padding: 24px 20px;
@@ -320,10 +376,16 @@
             }
         }
         .navbar-buft {
-            background-color: #0D2D62;
+            background: transparent;
             border: none;
             border-radius: 0;
             margin-bottom: 0;
+            padding: 0 0 12px;
+        }
+        .navbar-shell {
+            background-color: #0D2D62;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
         }
         .navbar-buft .navbar-nav > li > a {
             color: #f0f0f0 !important;
@@ -398,24 +460,26 @@
     <!-- Navbar -->
     <div class="navbar navbar-buft">
         <div class="container page-shell">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainNavbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand visible-xs" href="#" style="color:white;">MENU</a>
-            </div>
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="#"><i class="fas fa-bus"></i> Bus</a></li>
-                    <li class="active"><a href="#"><i class="fas fa-chart-line"></i> Result</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
-                    <li><a href="#"><i class="fas fa-dollar-sign"></i> Bill</a></li>
-                    <li><a href="#"><i class="fas fa-key"></i> Update Password</a></li>
-                </ul>
+            <div class="navbar-shell">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainNavbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand visible-xs" href="#" style="color:white;">MENU</a>
+                </div>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-bus"></i> Bus</a></li>
+                        <li class="active"><a href="#"><i class="fas fa-chart-line"></i> Result</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                        <li><a href="#"><i class="fas fa-dollar-sign"></i> Bill</a></li>
+                        <li><a href="#"><i class="fas fa-key"></i> Update Password</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -469,6 +533,7 @@
             </div>
             <div class="panel-body table-responsive-custom">
                 <div class="table-scroll-hint">Mobile tip: swipe left or right to see the full table.</div>
+                <div class="table-responsive">
                 <table class="table table-bordered table-buft" id="semesterSummaryTable">
                     <thead>
                         <tr><th>SL</th><th>Semester</th><th>Credit Hour</th><th>GPA</th><th>CGPA</th></tr>
@@ -480,6 +545,7 @@
                         <tr><td>4</td><td>Fall 2025</td><td>21.00</td><td>3.47</td><td>2.89</td></tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
