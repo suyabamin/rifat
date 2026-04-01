@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Student Course Result | BUFT</title>
+    <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230D2D62'%3E%3Cpath d='M12 3L1 9l11 6 11-6-11-6zm0 11.5L5.5 12 12 8.5 18.5 12 12 14.5z'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        :root {
+            --page-max-width: 1380px;
+        }
+        /* Core theme / BUFT style */
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #223047;
+        }
+        .page-shell {
+            max-width: var(--page-max-width);
+            margin: 0 auto;
+        }
+        .bg-buft-primary {
+            background-color: #0D2D62 !important;
+        }
+        .text-buft-primary {
+            color: #0D2D62;
+        }
+        .btn-buft {
+            background-color: #0D2D62;
+            color: white;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .btn-buft:hover {
+            background-color: #1a3f7a;
+            color: white;
+        }
+        .panel-custom {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: white;
+            border: none;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
+            border-bottom: 2px solid #0D2D62;
+            padding: 18px 0;
+        }
+        .university-title {
+            font-family: 'Times New Roman', serif;
+            font-weight: bold;
+            line-height: 1.2;
+            color: #0D2D62;
+        }
+        .student-info-card {
+            background: #f9fafb;
+            border-left: 5px solid #0D2D62;
+            padding: 12px 18px;
+            border-radius: 12px;
+        }
+        .table-buft thead {
+            background-color: #0D2D62;
+            color: white;
+        }
+        .table-buft thead th {
+            border-bottom: none;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .table-buft tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .table-buft tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .status-online, .status-offline {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .status-online {
+            background-color: #e6fffa;
+            color: #2c7a7b;
+            border: 1px solid #2c7a7b;
+        }
+        .status-offline {
+            background-color: #fff5f5;
+            color: #e53e3e;
+            border: 1px solid #e53e3e;
+        }
+        #status-icon {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .status-online #status-icon {
+            background-color: #38a169;
+        }
+        .status-offline #status-icon {
+            background-color: #e53e3e;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .offline-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,240,0.96);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        .offline-card {
+            background: white;
+            padding: 30px 35px;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            border-top: 6px solid #e53e3e;
+        }
+        .no-scroll {
+            overflow: hidden;
+        }
+        .footer {
+            background: #eef2f5;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+        }
+        .avatar-img {
+            width: 92px;
+            height: 92px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #fff;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        .logo-img {
+            max-width: 96px;
+            height: auto;
+        }
+        .page-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .search-box-wrap {
+            width: min(100%, 420px);
+        }
+        .table-buft {
+            min-width: 1120px;
+        }
+        .table-buft td,
+        .table-buft th {
+            white-space: nowrap;
+        }
+        .table-buft td:nth-child(5),
+        .table-buft th:nth-child(5) {
+            white-space: normal;
+            min-width: 240px;
+        }
+        @media (max-width: 768px) {
+            .avatar-img {
+                width: 55px;
+                height: 55px;
+            }
+            .logo-img {
+                max-width: 55px;
+            }
+            .university-title {
+                font-size: 14px;
+            }
+            .search-box-wrap {
+                width: 100%;
+            }
+        }
+        .navbar-buft {
+            background-color: #0D2D62;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+        .navbar-buft .navbar-nav > li > a {
+            color: #f0f0f0 !important;
+            font-weight: 500;
+        }
+        .navbar-buft .navbar-nav > li > a:hover {
+            background-color: #1e3f72;
+            color: white !important;
+        }
+        .navbar-toggle {
+            background-color: #2c4e82;
+        }
+        .icon-bar {
+            background-color: white;
+        }
+        .student-details-header {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div id="offlineOverlay" class="offline-overlay">
+    <div class="offline-card">
+        <i class="fas fa-wifi-slash" style="font-size: 56px; color: #e53e3e; margin-bottom: 20px;"></i>
+        <h2 style="color: #e53e3e;">Connection Lost</h2>
+        <p style="font-size: 18px;">You are offline. Please check your internet connection.</p>
+        <div style="margin: 20px auto; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #e53e3e; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p><strong>Waiting for connection...</strong></p>
+    </div>
+</div>
+
+<div class="container-fluid" style="padding: 0;">
+    <!-- Header with logo, title, student photo -->
+    <div class="header-bg">
+        <div class="container page-shell">
+            <div class="row" style="display: flex; align-items: center; flex-wrap: wrap;">
+                <!-- University Logo -->
+                <div class="col-xs-3 col-sm-2 col-md-2 text-center">
+                    <img id="siteLogo" src="buft_logo.png" alt="BUFT Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230D2D62\'/%3E%3Ctext x=\'50\' y=\'55\' font-size=\'14\' text-anchor=\'middle\' fill=\'white\'%3EBUFT%3C/text%3E%3C/svg%3E';">
+                </div>
+                <!-- University Name -->
+                <div class="col-xs-6 col-sm-5 col-md-5">
+                    <div class="university-title" style="font-size: 20px; font-weight: bold;">
+                        BGMEA <br> UNIVERSITY OF <br> FASHION & TECHNOLOGY
+                    </div>
+                </div>
+                <!-- Student Info & Photo -->
+                <div class="col-xs-3 col-sm-5 col-md-5 text-right">
+                    <div class="student-details-header">
+                        <a href="#" style="color:#c00; font-weight:bold;" onclick="alert('Demo mode: logout disabled'); return false;">Logout</a> | 
+                        <span style="font-weight: bold;">241-095-801</span><br>
+                        <span>User Role : Student</span><br>
+                        <span>Current : 2026, Spring - 261 - Term</span><br>
+                        <span>Reg.2026, Spring - 261 - Term</span><br>
+                        <span>06 Feb 2026 - 31 Aug 2026</span><br>
+                        <span id="liveDate" style="color: #F66545; font-weight: bold;"></span><br>
+                        <div id="connection-status" class="status-online" style="margin-top: 6px; display: inline-block;">
+                            <span id="status-icon"></span>
+                            <span id="status-text">Online</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px;">
+                        <img id="profilePhoto" src="27094.jpg" alt="Student Photo" class="avatar-img" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%230D2D62\'/%3E%3Ctext x=\'50\' y=\'67\' font-size=\'30\' text-anchor=\'middle\' fill=\'white\'%3E👤%3C/text%3E%3C/svg%3E';">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-buft">
+        <div class="container page-shell">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainNavbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand visible-xs" href="#" style="color:white;">MENU</a>
+            </div>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-bus"></i> Bus</a></li>
+                    <li class="active"><a href="#"><i class="fas fa-chart-line"></i> Result</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                    <li><a href="#"><i class="fas fa-dollar-sign"></i> Bill</a></li>
+                    <li><a href="#"><i class="fas fa-key"></i> Update Password</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container page-shell" style="margin-top: 20px; margin-bottom: 40px;">
+        <!-- Page Title & Search Row -->
+        <div class="page-title-row" style="margin-bottom: 20px;">
+            <div>
+                <h2 style="color: #0D2D62; font-weight: 700; margin: 0;">Student Course Result History</h2>
+            </div>
+            <div class="search-box-wrap">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fas fa-search"></i></span>
+                    <input type="text" id="globalSearchInput" class="form-control" placeholder="Search by course name, code, grade..." title="Global filter">
+                </div>
+            </div>
+        </div>
+
+        <!-- Student info + filter panel -->
+        <div class="panel panel-custom" style="margin-bottom: 25px;">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label><strong>Student ID</strong></label>
+                        <input type="text" class="form-control" value="241-095-801" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label><strong>Formal Code</strong></label>
+                        <input type="text" id="formalCodeFilter" class="form-control" placeholder="Filter by Formal Code">
+                    </div>
+                    <div class="col-md-2" style="margin-top: 22px;">
+                        <button id="filterFormalBtn" class="btn btn-buft btn-sm" style="width:100%;"><i class="fas fa-filter"></i> Filter</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button id="resetFiltersBtn" class="btn btn-default btn-sm" style="margin-top:22px; width:100%;"><i class="fas fa-undo-alt"></i> Reset Filters</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row student-info-card">
+                    <div class="col-md-12"><strong>Student Name :</strong> Md. Fahim Ashfaq Rifat</div>
+                    <div class="col-md-12"><strong>Batch :</strong> [241] Spring 2024 &nbsp;|&nbsp; <strong>Program :</strong> TE (Textile Engineering)</div>
+                    <div class="col-md-12"><strong>CGPA :</strong> <span style="color:#0D2D62; font-weight:bold; font-size:18px;">2.39</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semester wise GPA / CGPA Summary Table (updated Fall 2025) -->
+        <div class="panel panel-custom">
+            <div class="panel-heading bg-buft-primary" style="color:white; font-weight:bold; border-radius: 12px 12px 0 0;">
+                <i class="fas fa-chart-simple"></i> Semester Wise Performance
+            </div>
+            <div class="panel-body table-responsive-custom">
+                <table class="table table-bordered table-buft" id="semesterSummaryTable">
+                    <thead>
+                        <tr><th>SL</th><th>Semester</th><th>Credit Hour</th><th>GPA</th><th>CGPA</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Spring 2024</td><td>19.00</td><td>3.16</td><td>3.16</td></tr>
+                        <tr><td>2</td><td>Fall 2024</td><td>23.00</td><td>2.46</td><td>2.78</td></tr>
+                        <tr><td>3</td><td>Spring 2025</td><td>17.00</td><td>2.47</td><td>2.69</td></tr>
+                        <tr><td>4</td><td>Fall 2025</td><td>21.00</td><td>3.47</td><td>2.89</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Detailed Course Result Table (first 10 grades updated) -->
+        <div class="panel panel-custom">
+            <div class="panel-heading bg-buft-primary" style="color:white; font-weight:bold;">
+                <i class="fas fa-book-open"></i> Registered Courses & Grades
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-buft" id="courseResultTable" style="margin-bottom: 0;">
+                        <thead>
+                            <tr><th>SL</th><th>Semester</th><th>Formal Code</th><th>Version Code</th><th>Course Name</th><th>Credit</th><th>Section</th><th>Grade</th><th>Grade Point</th><th>Course Status</th></tr>
+                        </thead>
+                        <tbody id="courseTableBody">
+                            <!-- First 10 rows with updated grades -->
+                            <tr><td>1</td><td>Fall 2025</td><td>TEX07232203</td><td>TEX07232203</td><td>Apparel Manufacturing - I</td><td>3.00</td><td>TE_241_2</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>2</td><td>Fall 2025</td><td>TEX07232105</td><td>TEX07232105</td><td>Textile Raw Materials II</td><td>3.00</td><td>TE_242_2</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>3</td><td>Fall 2025</td><td>ME07152101</td><td>ME07152101</td><td>Elements of Mechanical Engineering</td><td>2.00</td><td>TE_242_4</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>4</td><td>Fall 2025</td><td>TEX07232207</td><td>TEX07232207</td><td>Industrial Management</td><td>3.00</td><td>TE_241_2</td><td>A-</td><td>3.50</td><td>Passed</td></tr>
+                            <tr><td>5</td><td>Fall 2025</td><td>TEX07232205</td><td>TEX07232205</td><td>Textile Testing & Quality Control-I</td><td>2.00</td><td>TE_241_2</td><td>A-</td><td>3.50</td><td>Passed</td></tr>
+                            <tr><td>6</td><td>Fall 2025</td><td>EEE07132201</td><td>EEE07132201</td><td>Elements of Electrical Engineering & Electronics</td><td>2.00</td><td>TE_241_2</td><td>A</td><td>3.75</td><td>Passed</td></tr>
+                            <tr><td>7</td><td>Fall 2025</td><td>EEE07132202</td><td>EEE07132202</td><td>Elements of Electrical Eng & Electronics Lab</td><td>1.50</td><td>TE_241_3A</td><td>A</td><td>3.75</td><td>Passed</td></tr>
+                            <tr><td>8</td><td>Fall 2025</td><td>TEX07232202</td><td>TEX07232202</td><td>Wet Processing –I Lab</td><td>1.50</td><td>TE_241_2B</td><td>A</td><td>3.75</td><td>Passed</td></tr>
+                            <tr><td>9</td><td>Fall 2025</td><td>TEX07232206</td><td>TEX07232206</td><td>Textile Testing & Quality Control-I Lab</td><td>1.50</td><td>TE_241_1B</td><td>A+</td><td>4.00</td><td>Passed</td></tr>
+                            <tr><td>10</td><td>Fall 2025</td><td>TEX07232204</td><td>TEX07232204</td><td>Apparel Manufacturing - I Lab</td><td>1.50</td><td>TE_241_1A</td><td>A+</td><td>4.00</td><td>Passed</td></tr>
+                            <!-- Remaining rows unchanged (11-40) -->
+                            <tr><td>11</td><td>Fall 2025</td><td>TEM03112207</td><td>TEM03112207</td><td>Managerial Economics</td><td>3.00</td><td></td><td></td><td></td><td>Dropped</td></tr>
+                            <tr><td>12</td><td>Fall 2025</td><td>TEX07232201</td><td>TEX07232201</td><td>Wet Processing -I</td><td>3.00</td><td></td><td></td><td></td><td>Dropped</td></tr>
+                            <tr><td>13</td><td>Spring 2025</td><td>TEX07232105</td><td>TEX07232105</td><td>Textile Raw Materials II</td><td>3.00</td><td>TE_241_2</td><td>R</td><td>0.00</td><td>Retake</td></tr>
+                            <tr><td>14</td><td>Spring 2025</td><td>ME07152101</td><td>ME07152101</td><td>Elements of Mechanical Engineering</td><td>2.00</td><td>TE_241_2</td><td>R</td><td>0.00</td><td>Retake</td></tr>
+                            <tr><td>15</td><td>Spring 2025</td><td>TEX07232103</td><td>TEX07232103</td><td>Fabric Processing I</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>16</td><td>Spring 2025</td><td>TEX07232101</td><td>TEX07232101</td><td>Yarn Manufacturing I</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>17</td><td>Spring 2025</td><td>STAT05422101</td><td>STAT05422101</td><td>Statistics</td><td>3.00</td><td>TE_241_2</td><td>C</td><td>2.25</td><td>Passed</td></tr>
+                            <tr><td>18</td><td>Spring 2025</td><td>TEX07232106</td><td>TEX07232106</td><td>Textile Physics I</td><td>2.00</td><td>TE_241_2</td><td>C</td><td>2.25</td><td>Passed</td></tr>
+                            <tr><td>19</td><td>Spring 2025</td><td>ME07152102</td><td>ME07152102</td><td>Elements of Mechanical Engineering Lab</td><td>1.50</td><td>TE_241_2B</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>20</td><td>Spring 2025</td><td>CSE06111102</td><td>CSE06111102</td><td>Intro to Computer Programming Lab</td><td>1.50</td><td>TE_241_2B</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>21</td><td>Spring 2025</td><td>TEX07232102</td><td>TEX07232102</td><td>Yarn Manufacturing I Lab</td><td>1.50</td><td>TE_241_2B</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>22</td><td>Spring 2025</td><td>TEX07232104</td><td>TEX07232104</td><td>Fabric Processing I Lab</td><td>1.50</td><td>TE_241_2B</td><td>A-</td><td>3.50</td><td>Passed</td></tr>
+                            <tr><td>23</td><td>Fall 2024</td><td>TEX07231201</td><td>TEX07231201</td><td>Polymer Science</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>24</td><td>Fall 2024</td><td>PHY05331203</td><td>PHY05331203</td><td>Physics II</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>25</td><td>Fall 2024</td><td>MATH05411203</td><td>MATH05411203</td><td>Mathematics II</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>26</td><td>Fall 2024</td><td>CHEM05311203</td><td>CHEM05311203</td><td>Organic Chemistry</td><td>3.00</td><td>TE_241_2</td><td>D</td><td>2.00</td><td>Passed</td></tr>
+                            <tr><td>27</td><td>Fall 2024</td><td>IPE07991202</td><td>IPE07991202</td><td>Workshop Practice Lab</td><td>1.50</td><td>TE_241_2B</td><td>C+</td><td>2.50</td><td>Passed</td></tr>
+                            <tr><td>28</td><td>Fall 2024</td><td>ME07151204</td><td>ME07151204</td><td>Engineering Drawing Lab</td><td>1.50</td><td>TE_241_2B</td><td>B-</td><td>2.75</td><td>Passed</td></tr>
+                            <tr><td>29</td><td>Fall 2024</td><td>SOC03141101</td><td>SOC03141101</td><td>Bangladesh Studies</td><td>2.00</td><td>TE_241_2</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>30</td><td>Fall 2024</td><td>ENG02311201</td><td>ENG02311201</td><td>English Communication and Composition</td><td>3.00</td><td>TE_241_2</td><td>B</td><td>3.00</td><td>Passed</td></tr>
+                            <tr><td>31</td><td>Fall 2024</td><td>CHEM05311204</td><td>CHEM05311204</td><td>Organic Chemistry Lab</td><td>1.50</td><td>TE_241_2B</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>32</td><td>Fall 2024</td><td>PHY05331204</td><td>PHY05331204</td><td>Physics II Lab</td><td>1.50</td><td>TE_241_2B</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>33</td><td>Spring 2024</td><td>MATH05411103</td><td>MATH05411103</td><td>Mathematics</td><td>3.00</td><td>2</td><td>C+</td><td>2.50</td><td>Passed</td></tr>
+                            <tr><td>34</td><td>Spring 2024</td><td>PHY05331103</td><td>PHY05331103</td><td>Physics I</td><td>3.00</td><td>2</td><td>B-</td><td>2.75</td><td>Passed</td></tr>
+                            <tr><td>35</td><td>Spring 2024</td><td>TEX07231101</td><td>TEX07231101</td><td>Textile Raw Materials I</td><td>3.00</td><td>2</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>36</td><td>Spring 2024</td><td>BNG02311101</td><td>BNG02311101</td><td>Functional Bangla</td><td>2.00</td><td>2</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>37</td><td>Spring 2024</td><td>CHEM05311103</td><td>CHEM05311103</td><td>General and Physical Chemistry</td><td>3.00</td><td>2</td><td>B+</td><td>3.25</td><td>Passed</td></tr>
+                            <tr><td>38</td><td>Spring 2024</td><td>ENG02311101</td><td>ENG02311101</td><td>Basic English</td><td>2.00</td><td>2</td><td>A-</td><td>3.50</td><td>Passed</td></tr>
+                            <tr><td>39</td><td>Spring 2024</td><td>PHY05331104</td><td>PHY05331104</td><td>Physics I Lab</td><td>1.50</td><td>2B</td><td>A</td><td>3.75</td><td>Passed</td></tr>
+                            <tr><td>40</td><td>Spring 2024</td><td>CHEM05311104</td><td>CHEM05311104</td><td>General and Physical Chemistry Lab</td><td>1.50</td><td>2B</td><td>A</td><td>3.75</td><td>Passed</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Powered by <b>Edusoft Consultants Ltd.</b><br>
+        Copyright © 2013 - <span id="currentYear"></span> Edusoft Consultants Ltd. All rights reserved.
+    </div>
+</div>
+
+<script>
+    /*
+      ছবি পরিবর্তনের জায়গা
+      নিচের 2টি লাইন থেকে URL বদলাবেন:
+      1. logoUrl = লোগোর URL বা file path
+      2. profileUrl = প্রোফাইল ছবির URL বা file path
+    */
+    const imageConfig = {
+        // এখানে logo URL বসান
+        logoUrl: 'file:///C:/Users/HP/Downloads/Student%20Course%20Result_files/27094.jpg',
+        // এখানে profile picture URL বসান
+        profileUrl: 'file:///C:/Users/HP/Downloads/Student%20Course%20Result_files/27094.jpg'
+    };
+
+    function applyImageConfig() {
+        const logoElement = document.getElementById('siteLogo');
+        const profileElement = document.getElementById('profilePhoto');
+
+        if (logoElement && imageConfig.logoUrl) {
+            logoElement.src = imageConfig.logoUrl;
+        }
+
+        if (profileElement && imageConfig.profileUrl) {
+            profileElement.src = imageConfig.profileUrl;
+        }
+    }
+
+    applyImageConfig();
+
+    // Live date
+    function updateLiveDate() {
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const now = new Date();
+        const dayName = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        document.getElementById('liveDate').innerText = `${dayName}, ${date} ${month} ${year}`;
+        document.getElementById('currentYear').innerText = year;
+    }
+    updateLiveDate();
+
+    // Filter Logic
+    const tbody = document.getElementById('courseTableBody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    function applyFilters() {
+        const globalVal = document.getElementById('globalSearchInput').value.trim().toUpperCase();
+        const formalVal = document.getElementById('formalCodeFilter').value.trim().toUpperCase();
+        
+        rows.forEach(row => {
+            const rowText = row.innerText.toUpperCase();
+            let matchGlobal = globalVal === "" || rowText.includes(globalVal);
+            let matchFormal = true;
+            if (formalVal !== "") {
+                const formalCell = row.cells[2];
+                if (formalCell) matchFormal = formalCell.innerText.trim().toUpperCase().includes(formalVal);
+                else matchFormal = false;
+            }
+            row.style.display = (matchGlobal && matchFormal) ? "" : "none";
+        });
+    }
+    
+    function resetFilters() {
+        document.getElementById('globalSearchInput').value = "";
+        document.getElementById('formalCodeFilter').value = "";
+        rows.forEach(row => row.style.display = "");
+    }
+    
+    document.getElementById('globalSearchInput').addEventListener('keyup', applyFilters);
+    document.getElementById('filterFormalBtn').addEventListener('click', applyFilters);
+    document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+    
+    // Offline detection
+    const overlay = document.getElementById('offlineOverlay');
+    const bodyElem = document.body;
+    const statusDiv = document.getElementById('connection-status');
+    const statusTextSpan = document.getElementById('status-text');
+    
+    function setOfflineMode(isOffline) {
+        if (isOffline) {
+            overlay.style.display = 'flex';
+            bodyElem.classList.add('no-scroll');
+            if (statusTextSpan) statusTextSpan.innerText = 'Offline - No Internet';
+            if (statusDiv) statusDiv.className = 'status-offline';
+        } else {
+            overlay.style.display = 'none';
+            bodyElem.classList.remove('no-scroll');
+            if (statusTextSpan) statusTextSpan.innerText = 'Online';
+            if (statusDiv) statusDiv.className = 'status-online';
+        }
+    }
+    
+    function checkConnection() {
+        if (!navigator.onLine) {
+            setOfflineMode(true);
+            return;
+        }
+        fetch('https://static.googleusercontent.com/media/www.google.com/en//images/favicon.ico?t=' + Date.now(), {
+            method: 'HEAD',
+            mode: 'no-cors',
+            cache: 'no-store'
+        }).then(() => setOfflineMode(false))
+          .catch(() => setOfflineMode(true));
+    }
+    
+    window.addEventListener('online', checkConnection);
+    window.addEventListener('offline', () => setOfflineMode(true));
+    setInterval(checkConnection, 2000);
+    checkConnection();
+    
+    $(document).ready(function(){
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+</body>
+</html>
